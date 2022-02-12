@@ -1,27 +1,44 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { emojify, initialiseDecorations } from './emojify'; 
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  console.log('Emojification enabled!');
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "syntax-decorations" is now active!');
+  let emojis = initialiseDecorations();
+  let lastUsed: { [editor: string]: string[] } = {};
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('syntax-decorations.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
+  vscode.extensions.onDidChange(() =>
+    vscode.window.visibleTextEditors.forEach(
+      (editor) => (lastUsed[editor.toString()] = emojify(editor, emojis))
+    )
+  );
 
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from Syntax Decorations!');
-	});
+  context.subscriptions.push(
+    vscode.window.onDidChangeVisibleTextEditors((editor) => {
+      lastUsed = {};
+      editor.forEach(
+        (editor) => (lastUsed[editor.toString()] = emojify(editor, emojis))
+      );
+    }),
 
-	context.subscriptions.push(disposable);
+    vscode.workspace.onDidChangeTextDocument((event) => {
+      if (event.contentChanges.length > 0) {
+        vscode.window.visibleTextEditors.forEach((editor) => {
+          if (editor.document.uri === event.document.uri) {
+            lastUsed[editor.toString()] = emojify(
+              editor,
+              emojis,
+              lastUsed[editor.toString()]
+            );
+          }
+        });
+      }
+    })
+  );
+
+  vscode.window.visibleTextEditors.forEach(
+    (editor) => (lastUsed[editor.toString()] = emojify(editor, emojis))
+  );
 }
 
-// this method is called when your extension is deactivated
 export function deactivate() {}
