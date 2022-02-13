@@ -1,29 +1,70 @@
 {
-	"name": "syntax-decorations",
-	"displayName": "Syntax Decorations",
-	"description": "Cognitively enhance your code, by assigning your own symbols to language keywords.",
+	"name": "code-decorations",
+	"displayName": "Decorations for JS / TS",
+	"description": "TODO",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.50.0"
 	},
 	"categories": [
-		"Other"
+		"Programming Languages"
 	],
 	"activationEvents": [
 		"*"
 	],
 	"main": "./out/extension.js",
-	"exports": [
-		
-	],
 	"contributes": {
 		"commands": [
-			{
-				"command": "syntax-decorations.helloWorld",
-				"title": "Hello World"
+		  {
+			"command": "decorations.toggle",
+			"title": "Decorations for JS / TS: Toggle"
+		  }
+		],
+		"configuration": [
+		  {
+			"title": "Decorations for JS / TS",
+			"properties": {
+			  "decorations.enabled": {
+				"type": "boolean",
+				"description": "Enable Decorations for JS / TS",
+				"default": true
+			  },
+			  "decorations.fontWeight": {
+				"type": "string",
+				"default": "400",
+				"enum": [
+				  "100",
+				  "200",
+				  "300",
+				  "400",
+				  "500",
+				  "600",
+				  "700",
+				  "800",
+				  "900"
+				],
+				"description": "Font-weight CSS property of decorations"
+			  },
+			  "decorations.fontStyle": {
+				"type": "string",
+				"default": "normal",
+				"enum": [
+				  "normal",
+				  "italic"
+				],
+				"description": "Font-style CSS property of decorations"
+			  }
 			}
+		  }
+		],
+		"keybindings": [
+		  {
+			"command": "decorations.toggle",
+			"key": "ctrl+k d",
+			"mac": "cmd+k d"
+		  }
 		]
-	},
+	  },
 	"scripts": {
 		"vscode:prepublish": "yarn run compile",
 		"compile": "tsc -p ./",
@@ -45,9 +86,5 @@
 		"typescript": "^4.0.2",
 		"vscode-test": "^1.4.0"
 	},
-	"dependencies": {
-		"acorn-loose": "^8.0.1",
-		"acorn-walk": "^8.0.0",
-		"emojilib": "^2.4.0"
-	}
+	"dependencies": {}
 }

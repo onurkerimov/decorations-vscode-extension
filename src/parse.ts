@@ -6,13 +6,9 @@ const tokens = {
   multilineComment: /\/\*[\s\S]*?\*\//,
   string: /(['"`])(\\\1|[\s\S])*?\1/,
   regex: /\/(\\\/|[^\n])*?\//,
-  delimiter: /[\\.,:;+\-*\/=<>()[\]{}|?!&@~]/,
-  whitespace: /\s+/,
-  name: /[\w$]+/,
-  unknown: /[\s\S]/
 };
 
-const searchInLine = (line, dict) => {
+const searchInLine = (line: string, dict) => {
   const arr = [];
   for (let [type, regex] of dict) {
     for (let item of line.matchAll(new RegExp(regex, 'g'))) {
@@ -45,11 +41,10 @@ const search = (text: string, dict: any) =>
 export default (input: string): {type: string, start: Location, end: Location}[] => {
   const dictionary = [
     ['', /(const|let|var|type|interface)\s+[$\w\{\[]/],
-    ['', /( default) /],
     ['', /(return|export|import)\s+([^:\s,])/],
     // ['', /(true|false|undefined|null)([^:])/],
-    ['', /(return)(\n|;)/],
-    ['', /(default)\s+([^:\s,])/],
+    ['', /(return)\s*(\n|;)/],
+    ['', /(export default)\s+([^:\s,])/],
     // ['', /(function)\s+([^:\s,])/],
     ['', /(\;)/],
   ];
