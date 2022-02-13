@@ -4,7 +4,7 @@ import * as acornWalk from 'acorn-walk';
 
 type Location = {line: number, column: number};
 
-export default (input: string): {type: string, start: Location, end: Location}[] => {
+const parse = (input: string): {type: string, start: Location, end: Location}[] => {
   let patches: any[] = [];
   let acornNodes = acornLoose.parse(input, {locations: true});
 
@@ -72,6 +72,7 @@ export default (input: string): {type: string, start: Location, end: Location}[]
     }
   });
 
-  console.log(patches);
   return patches;
 };
+
+export default parse;

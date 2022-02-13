@@ -1,15 +1,24 @@
 import * as vscode from 'vscode';
-import looseParse from './looseParse';
+import parse from './parse';
 
 const symbolMap = {
   var: "∅",
   let: "○",
   const: "●",
-  // interface: "■",
   // function: "ƒn",
   return: "⮑",//"➔",//"➞","↳"
   import: '❯',//'⬇',
-  export: '❮'//'⬆',
+  export: '❮',//'⬆',
+  ' default': '❮❮',
+
+  type: '✣',
+  interface: '✣',
+  ';': '',
+  // true: '🄣',
+  // false: '🄕',
+  // undefined: '🄤',
+  // null: '🄝',
+  // 'function': '⨍'
 };
 
 export function initialiseDecorations() {
@@ -30,16 +39,21 @@ export function initialiseDecorations() {
     });    
   });
 
+     
+  console.log(decorations);
+
   return decorations;
 }
 
 export function emojify(
   target: vscode.TextEditor,
-  decorations: { [emoji: string]: vscode.TextEditorDecorationType }) {
+  decorations: { [emoji: string]: vscode.TextEditorDecorationType },
+  lastUsed?: string[]
+) {
   let sourceCode = target.document.getText();
   let decorationArray: { [emoji: string]: vscode.DecorationOptions[] } = {};
 
-  const patches = looseParse(sourceCode);
+  const patches = parse(sourceCode);
   patches.forEach((patch) => {
     //@ts-ignore
     const symbol = symbolMap[patch.type];
@@ -52,6 +66,12 @@ export function emojify(
       );
       decorationArray[symbol].push({ range });
   });
+
+  if (lastUsed) {
+    lastUsed.forEach((emoji) => {
+      target.setDecorations(decorations[emoji], []);
+    });
+  }
 
   let used = [];
 
