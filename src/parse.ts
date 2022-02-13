@@ -1,7 +1,7 @@
 type Location = {line: number, column: number};
 
 
-const tokens = {
+const excludedRangeDict = {
   comment: /(\/\/).*?(?=\n|$)/,
   multilineComment: /\/\*[\s\S]*?\*\//,
   string: /(['"`])(\\\1|[\s\S])*?\1/,
@@ -14,8 +14,8 @@ const searchInLine = (line: string, dict) => {
     for (let item of line.matchAll(new RegExp(regex, 'g'))) {
       arr.push({
         type: item[1],
-        start: item.index,
-        end: item.index + item[1].length,
+        start: item.index || 0,
+        end: (item.index || 0) + item[1].length,
       });
     }
   }

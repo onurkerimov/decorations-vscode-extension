@@ -41,8 +41,17 @@ const decorationTypeMap: Record<string, string> = {
 };
 
 export const applyDecorations = (_ctx: vscode.ExtensionContext, editor: vscode.TextEditor, patches: any[]) => {
-  const currentLine = editor.selection.active.line;   
+  const cursorPosition = editor.selection.active;   
+  const selectionEndLine = editor.selection.active.line;   
+  const selectionStartLine = editor.selection.anchor.line;
+
+  if(selectionEndLine !== selectionStartLine || editor.selections.length > 1) {
+    editor.setDecorations(keywordDecoration, []);
+    return;
+  }
   
+
+
   const decorationsArray = patches
     .map((patch) => {
       return {
@@ -60,10 +69,23 @@ export const applyDecorations = (_ctx: vscode.ExtensionContext, editor: vscode.T
       } as vscode.DecorationOptions;
     })
     .filter(item => {
-      if(item.range.start.line === currentLine || item.range.start.line === currentLine) {
-        return false
+      if(item.range.start.line === selectionEndLine
+        ) {
+
+        if(cursorPosition.isBeforeOrEqual(item.range.end)
+           && cursorPosition.isAfterOrEqual(item.range.start) 
+           && !editor.selection.contains(item.range)) {
+          editor.selections = [new vscode.Selection(
+            item.range.start.line, 
+            item.range.start.character,
+            item.range.end.line,
+            item.range.end.character
+          )];
+        }
+        
+        return false;
       }
-      return true
+      return true;
     });
   editor.setDecorations(keywordDecoration, decorationsArray);
 };
