@@ -11,7 +11,15 @@ function registerCommands() {
   });
 }
 
-const supportedLanguages = ["javascript", "typescript", "javascriptreact", "typescriptreact"];
+const supportedLanguages = ["markdown","javascript", "typescript", "javascriptreact", "typescriptreact"];
+
+type Location = {line: number, column: number};
+let lastSourceCode: string | undefined;
+let patches: {
+  type: string;
+  start: Location;
+  end: Location;
+}[];
 
 const run = (_ctx: vscode.ExtensionContext, editor: vscode.TextEditor | undefined) => {
   if(!editor) return;
@@ -20,13 +28,18 @@ const run = (_ctx: vscode.ExtensionContext, editor: vscode.TextEditor | undefine
   const isEnabled = vscode.workspace.getConfiguration(settingsKey).get("enabled");
 
   if(!isEnabled) {
-    disposeDecorations();
+    applyDecorations(_ctx, editor, []);
     return;
   }
 
-  let sourceCode = editor.document.getText();
-  const patches = parse(sourceCode);
+  const sourceCode = editor.document.getText();
+
+  if(lastSourceCode !== sourceCode) {
+    patches = parse(sourceCode);
+  }
   applyDecorations(_ctx, editor, patches);
+
+  lastSourceCode = sourceCode;
 };
 
 export function activate(ctx: vscode.ExtensionContext) {

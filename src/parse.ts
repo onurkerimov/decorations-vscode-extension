@@ -41,12 +41,12 @@ const search = (text: string, dict: any) =>
 export default (input: string): {type: string, start: Location, end: Location}[] => {
   const dictionary = [
     ['', /(const|let|var|type|interface)\s+[$\w\{\[]/],
+    ['', /(export default)\s+([^:\s,])/],
     ['', /(return|export|import)\s+([^:\s,])/],
     // ['', /(true|false|undefined|null)([^:])/],
     ['', /(return)\s*(\n|;)/],
-    ['', /(export default)\s+([^:\s,])/],
     // ['', /(function)\s+([^:\s,])/],
-    ['', /(\;)/],
+    // ['', /(\;)/],
   ];
   return search(input, dictionary);
 };

@@ -3,7 +3,6 @@ import * as vscode from 'vscode';
 const keywordDecoration = vscode.window.createTextEditorDecorationType({
   letterSpacing: '-1ch',
   opacity: '0',
-  rangeBehavior: 1,
 });
 
 const semicolonDecoration = vscode.window.createTextEditorDecorationType({});
@@ -31,7 +30,7 @@ const decorationTypeMap: Record<string, string> = {
   export: '❮', //'⬆',
   type: '✣',
   interface: '✣',
-  ';': '',
+  // ';': '',
   'export default': '❮',
   // function: "ƒn",
   // true: '🄣',
@@ -41,11 +40,16 @@ const decorationTypeMap: Record<string, string> = {
 };
 
 export const applyDecorations = (_ctx: vscode.ExtensionContext, editor: vscode.TextEditor, patches: any[]) => {
-  const cursorPosition = editor.selection.active;   
-  const selectionEndLine = editor.selection.active.line;   
-  const selectionStartLine = editor.selection.anchor.line;
+  const cursorPosition = editor.selection.active;
+  const selectionStartPosition = editor.selection.anchor;
+  const selectionEndLine = cursorPosition.line;   
+  const selectionStartLine = selectionStartPosition.line;
 
-  if(selectionEndLine !== selectionStartLine || editor.selections.length > 1) {
+  const isMultiline = selectionEndLine !== selectionStartLine 
+  const isPseudoMultiline = (cursorPosition.character === 0 && cursorPosition.line === selectionStartLine + 1); 
+  
+
+  if(isMultiline && !isPseudoMultiline || editor.selections.length > 1) {
     editor.setDecorations(keywordDecoration, []);
     return;
   }
@@ -53,6 +57,7 @@ export const applyDecorations = (_ctx: vscode.ExtensionContext, editor: vscode.T
 
 
   const decorationsArray = patches
+    .filter(patch => decorationTypeMap[patch.type])
     .map((patch) => {
       return {
         range: new vscode.Range(
@@ -64,25 +69,40 @@ export const applyDecorations = (_ctx: vscode.ExtensionContext, editor: vscode.T
             contentText: decorationTypeMap[patch.type],
             fontStyle: vscode.workspace.getConfiguration("decorations").get("fontStyle"),
             fontWeight: vscode.workspace.getConfiguration("decorations").get("fontWeight"),
-          }
+          },
+          letterSpacing: '-1ch',
+          opacity: '0',
         }
       } as vscode.DecorationOptions;
     })
     .filter(item => {
-      if(item.range.start.line === selectionEndLine
-        ) {
-
-        if(cursorPosition.isBeforeOrEqual(item.range.end)
-           && cursorPosition.isAfterOrEqual(item.range.start) 
-           && !editor.selection.contains(item.range)) {
-          editor.selections = [new vscode.Selection(
-            item.range.start.line, 
-            item.range.start.character,
-            item.range.end.line,
-            item.range.end.character
-          )];
+      if(isPseudoMultiline){
+        if(item.range.start.line === selectionStartLine) {
+          return false;
         }
-        
+        // return true
+      }
+      if(
+        item.range.start.line === selectionEndLine
+        && cursorPosition.isBeforeOrEqual(item.range.end)
+        && cursorPosition.isAfterOrEqual(item.range.start) 
+      ) {
+        // if(
+        //   selectionStartPosition.isBefore(item.range.end)
+        //   && selectionStartPosition.isAfter(item.range.start) &&
+        //     cursorPosition.isBefore(item.range.end)
+        //     && cursorPosition.isAfter(item.range.start) 
+        //     && !editor.selection.contains(item.range)
+        // ) {
+        //   editor.selections = [
+        //     new vscode.Selection(
+        //       item.range.start.line, 
+        //       item.range.start.character,
+        //       item.range.end.line,
+        //       item.range.end.character
+        //     )
+        //   ];
+        // }
         return false;
       }
       return true;
