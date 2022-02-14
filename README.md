@@ -4,7 +4,7 @@ This is a plugin to cognitively enhance JavaScript and TypeScript developing exp
 It hides some keywords that are oftenly used, such as `const` and `return`. Instead, it displays single character decorations for them.
 
 <p align="center">
-  <img src="./assets/read.gif" width="600px" />
+  <img src="./assets/read.gif" width="520px" />
 </p>
 
 
