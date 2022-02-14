@@ -1,9 +1,11 @@
 # Decorations for JS / TS
 
-This is a plugin to cognitively enhance developer experience. 
-It hides some keywords that are oftenly used in JavaScript and TypeScript such as `const` and `return` (and more). Instead, it displays them as single character decorations.
+This is a plugin to cognitively enhance JavaScript and TypeScript developing experience. 
+It hides some keywords that are oftenly used, such as `const` and `return`. Instead, it displays single character decorations for them.
 
-It shares some of the same founding values of CoffeeScript.
+![Code navigation demonstration](./assets/read.gif)
+
+It doesn't replace the text. It relies on decorations feature of VSCode. To toggle it, use <kbd>Cmd+K D</kbd>, or "Decorations for JS / TS: Toggle" in command palette.
 
 ## Motivation
 
@@ -16,7 +18,6 @@ Nowadays, many things in frontend development is shaped and centered around Type
 
 ## Mapping
 
-
 | Keyword | Symbol | Keyword | Symbol |
 |-----|------|-----|------|
 |`var` | `∅` |`type` and `interface` | `✣` |
@@ -24,7 +25,14 @@ Nowadays, many things in frontend development is shaped and centered around Type
 |`const` | `●` |`export` | `❮` |
 |`return` | `⮑` |`export default` | `❮❮` |
 
-> Since `var`, `let`, and `const` are relatives, they're all circles. `type` is like a fancy cousin of them. There's literally a "return" symbol for `return`, and so on. I decided not to do anything with the rest of the keywords. 
+> Since `var`, `let`, and `const` are similar, they're all circles. `type` is like a fancy cousin of them. There's literally a "return" symbol for `return`, and lastly there are module related ones. I decided not to do anything for the rest of the keywords. 
+
+## Examples
+
+### While coding
+<img src="./assets/write.gif" width="300px" />
+
+> 
 
 | Before | After |
 |---|---|
