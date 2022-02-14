@@ -1,65 +1,31 @@
-# syntax-decorations README
+# Decorations for JS / TS
 
-This is the README for your extension "syntax-decorations". After writing up a brief description, we recommend including the following sections.
+This is a plugin to cognitively enhance developer experience. 
+It hides some keywords that are oftenly used in JavaScript and TypeScript such as `const` and `return` (and more). Instead, it displays them as single character decorations.
 
-## Features
+It shares some of the same founding values of CoffeeScript.
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+## Motivation
 
-For example if there is an image subfolder under your extension project workspace:
+This plugin exists because of a frustration that there are too many `const`s everywhere. `const` is a pretty long name for a keyword that's used that often. 
 
-\!\[feature X\]\(images/feature-x.png\)
+It used to be fine when there was only `var` as the variable declarator. 
+Even at those times, tools like CoffeeScript was being prefered to address some language discomforts. Next to addressing the unnecessity of `var`, CoffeScript also tried to solve other problems like unnecessity of curly braces, and used indentation instead. (Not something this extension does)
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+Nowadays, many things in frontend development is shaped and centered around TypeScript, so it's very difficult to get rid of it and start using other transpilers/languages. So I thought I could achieve the DX upgrade I wanted via an editor extension.
 
-## Requirements
+## Mapping
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
 
-## Extension Settings
+| Keyword | Symbol | Keyword | Symbol |
+|-----|------|-----|------|
+|`var` | `∅` |`type` and `interface` | `✣` |
+|`let` | `○` |`import` | `❯` |
+|`const` | `●` |`export` | `❮` |
+|`return` | `⮑` |`export default` | `❮❮` |
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+> Since `var`, `let`, and `const` are relatives, they're all circles. `type` is like a fancy cousin of them. There's literally a "return" symbol for `return`, and so on. I decided not to do anything with the rest of the keywords. 
 
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+| Before | After |
+|---|---|
+| ![before](./assets/before.png) | ![after](./assets/after.png) |
