@@ -3,7 +3,10 @@
 This is a plugin to cognitively enhance JavaScript and TypeScript developing experience. 
 It hides some keywords that are oftenly used, such as `const` and `return`. Instead, it displays single character decorations for them.
 
-![Code navigation demonstration](./assets/read.gif)
+<p align="center">
+  <img src="./assets/read.gif" width="600px" />
+</p>
+
 
 It doesn't replace the text. It relies on decorations feature of VSCode. To toggle it, use <kbd>Cmd+K D</kbd>, or "Decorations for JS / TS: Toggle" in command palette.
 
